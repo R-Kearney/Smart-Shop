@@ -7,7 +7,7 @@ os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
 #temp_sensor = '/sys/bus/w1/devices/SERIALNUMBER/w1_slave'
-tempSensors = {'Milk Fridge': '28-0316360119ff', 'Fridge': '28-031636b962ff'}
+tempSensors = {'Upper Freezer': '28-0316360119ff', 'Milk Fridge': '28-031636b962ff', 'Lower Freezer': '28-031636b6b2ff'}
 objectArray = {}
 
 class Device(object):
@@ -83,7 +83,7 @@ class Device(object):
         db.close()
 
     def checkForAlert(self):
-        if ((self.temp > 23) and (self.alertSent == 0)):
+        if ((self.temp > 0) and (self.alertSent == 0)):
             timeNow = time.time()
             self.alertSent = 1
             report = ("Location: %s, Temp: %d, Time: %s") % (self.deviceName, self.temp, timeNow)
@@ -92,7 +92,7 @@ class Device(object):
                 print("Alert Sent!!!")
             except Exception:
                 print("*Failed to send Alert*")
-        elif ((self.temp < 23) and (self.alertSent == 1)):
+        elif ((self.temp < 0) and (self.alertSent == 1)):
             self.alertSent = 0
 
 
@@ -102,5 +102,5 @@ for key in tempSensors.keys():
 while True:
     for key in objectArray.keys():
         objectArray.get(key).update()
-    time.sleep(5) #sleep for 1 second * 5min
+    time.sleep(300) #sleep for 1 second * 5min
     print("\n\n")

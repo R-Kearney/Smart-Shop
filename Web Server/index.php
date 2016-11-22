@@ -8,6 +8,7 @@
 <style>
 body {
 	padding: 20px;
+	font-size: 16px;
 }
  table, th, td {
 	 min-width: 50px;
@@ -40,6 +41,20 @@ $timeArray = array();
 $tempArray = array();
 $sensorName = array(); // holds sensor names
 $colourArray = array(); // holds colour for each line
+$displayRange = 1000;
+
+
+
+// // Get range if set
+if (isset($_GET["range"])) {
+		$displayRange = $_GET["range"];
+		if ($displayRange < 0) {
+			echo "Display All";
+		}
+		else{
+		echo "Display Range = Last " . $displayRange . " Inputs";
+	}
+}
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -54,29 +69,29 @@ $result = $conn->query($sql);
 // Check if the database table is empty.
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) { // fetches each row from the table
-		if ($row["Sensor"] == $lastSensor){ // Check if we are pulling from the same sensor
-			array_push(${"tempArray" . $i}, $row["Temp"]); // push next temp into array
-			array_push(${"timeArray" . $i}, $row["Time"]); // push next time into array
-		}
-		else { // make new array for new temp
-			if ($k == 0) {
-				$k++; // don't increment on the first run
-			}
-			else {
-				$i++; // increment
-				$k = $i; // Set k to i
-			}
-			${"timeArray" . $i} = array(); // new time array with incrimented number
-			${"tempArray" . $i} = array(); // new temp array with incrimented number
-			array_push(${"tempArray" . $i}, $row["Temp"]); // add the new data
-			array_push(${"timeArray" . $i}, $row["Time"]);
-			array_push($sensorName, $row["Sensor"]); // Add the sensor name to an array
-			array_push($colourArray, random_color()); // make a new random colour and store in array
-			$lastSensor = $row["Sensor"]; // Set current = last
-		}
-    }
+					if ($row["Sensor"] == $lastSensor){ // Check if we are pulling from the same sensor
+						array_push(${"tempArray" . $i}, $row["Temp"]); // push next temp into array
+						array_push(${"timeArray" . $i}, $row["Time"]); // push next time into array
+					}
+					else { // make new array for new temp
+						if ($k == 0) {
+							$k++; // don't increment on the first run
+						}
+						else {
+							$i++; // increment
+							$k = $i; // Set k to i
+						}
+						${"timeArray" . $i} = array(); // new time array with incrimented number
+						${"tempArray" . $i} = array(); // new temp array with incrimented number
+						array_push(${"tempArray" . $i}, $row["Temp"]); // add the new data
+						array_push(${"timeArray" . $i}, $row["Time"]);
+						array_push($sensorName, $row["Sensor"]); // Add the sensor name to an array
+						array_push($colourArray, random_color()); // make a new random colour and store in array
+						$lastSensor = $row["Sensor"]; // Set current = last
+					}
+			    }
 } else { // Table has no rows
-    echo "0 results found";
+    echo "<p><b>0 results found</b></p>";
 }
 $conn->close(); // Close database connection
 
@@ -93,16 +108,24 @@ for ($i = 1; $i <= $k; $i++){
 
 // Prints data for chart
 function tempData($id){
-	$num = count($GLOBALS["tempArray" . $id]); // Count elements in current temp array
-	for($x = 0; $x < $num; $x++){
+	$endRange = count($GLOBALS["tempArray" . $id]); // Count elements in current temp array
+	$x = $GLOBALS["displayRange"];
+	if ($x < 0 || $x >= $endRange){
+		 $element = 0; // Get start Element
+	}
+	else{
+		$element = ($endRange -  $x); // Get start Element
+	}
+	while ($element < $endRange){
 		echo("{ x: new Date('" );
-		echo($GLOBALS["timeArray" . $id][$x]);
+		echo($GLOBALS["timeArray" . $id][$element]);
 		echo("'), y: " );
-		echo($GLOBALS["tempArray" . $id][$x]);
+		echo($GLOBALS["tempArray" . $id][$element]);
 		echo("}" );
-		if(($x + 1) != $num) {
+		if(($element + 1) != $endRange) {
 			echo(", "); // if not last add ", "
 		}
+		$element++;
 	}
 }
 
@@ -137,6 +160,36 @@ function random_color() {
 </table>
 <br>
 
+<?php // Last Temps and display range ?>
+<br>
+<table>
+	<tr>
+	<td>
+	<form action="index.php" target="_self">
+			<select name="range">
+				<option value="24">2 Hours</option>
+		  <option value="288" selected="selected">1 Day</option>
+		  <option value="2016" selected="selected">7 Days</option>
+		  <option value="8640">1 Month</option>
+		  <option value="-1">ALL</option>
+			</select>
+		<input class="button-success pure-button" type="submit" value="Range">
+	</form>
+	</td>
+	<?php
+		// $k = number of temp sensors
+		// echo($k); - debug
+		for ($x=0; $x <= $k; $x++) {
+			echo "<tr> <td>";
+			$lastElement = (count(${"tempArray" . $x}) -1);
+			echo $sensorName[$x] . " Temp: " . "<b>" . ${"tempArray" . $x}[$lastElement] . "</b>";
+			echo "</td> </tr>";
+		}
+		?>
+	</tr>
+</table>
+<br>
+
 <?php // Container to hold graph and ledgend ?>
 <div class="graph">
 	<h3>Fridge Temp Graph</h3>
@@ -159,7 +212,7 @@ function random_color() {
 					label: '<?php echo($sensorName[$i]); ?>',
 					strokeColor: <?php echo("'#" . $colourArray[$i] . "'"); ?>,
 					data: [<?php  tempData($i);  ?>
-					] }<?php if ($i != $k){ echo(", {"); }
+					] }<?php if ($i != $k ){ echo(", {"); }
 				 } ?>
 				];
 
@@ -173,10 +226,14 @@ function random_color() {
 			legend: {position: 'bottom',},
 			scaleLabel: "<%=value%>oC",
 			scaleOverride : true,
-			scaleSteps : 15,
+			scaleSteps : 20,
 			scaleStepWidth : 2,
-			scaleStartValue : 0
+			scaleStartValue : -22
 		});
 </script>
+<br></br>
+<?php
+echo "Memory Usage " . memory_get_usage() . "Bytes";
+?>
 </body>
 </html>
