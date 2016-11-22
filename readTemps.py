@@ -7,8 +7,9 @@ os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
 #temp_sensor = '/sys/bus/w1/devices/SERIALNUMBER/w1_slave'
-tempSensors = {'Upper Freezer': '28-0316360119ff', 'Milk Fridge': '28-031636b962ff', 'Lower Freezer': '28-031636b6b2ff'}
+tempSensors = {'28-0316360119ff': 'Upper Freezer', '28-031636b962ff': 'Milk Fridge', '28-031636b6b2ff': 'Lower Freezer'}
 objectArray = {}
+tempLimit = {'28-0316360119ff': -10, '28-031636b962ff': 5, '28-031636b6b2ff': -10}
 
 class Device(object):
     rootLocation = '/sys/bus/w1/devices/'
@@ -18,11 +19,13 @@ class Device(object):
     lastTemp = 0
     temp = 0
     alertSent = 0
+    tempLimit = 0
+    timeTempHitLimit = 0
 
-    def __init__(self, name, serial):
+    def __init__(self, name, serial, tempLimit):
         self.readLocation = self.rootLocation + serial + self.slaveLocaton
         self.deviceName = name
-
+        self.tempLimit = tempLimit
 
     def update(self):
         try:
@@ -83,24 +86,31 @@ class Device(object):
         db.close()
 
     def checkForAlert(self):
-        if ((self.temp > 0) and (self.alertSent == 0)):
-            timeNow = time.time()
-            self.alertSent = 1
-            report = ("Location: %s, Temp: %d, Time: %s") % (self.deviceName, self.temp, timeNow)
-            try:
-                requests.post("https://maker.ifttt.com/trigger/button_pressed/with/key/bY70sf0_iym1J6GPy_gRAK", data=report)
-                print("Alert Sent!!!")
-            except Exception:
-                print("*Failed to send Alert*")
-        elif ((self.temp < 0) and (self.alertSent == 1)):
+        print("Alert Function: Temp =%d, limit=%d, alertSent:%d") % (self.temp, self.tempLimit, self.alertSent)
+        if ((self.temp >= self.tempLimit) and (self.alertSent == 0)):
+            print("Alert Waiting")
+            if (self.timeTempHitLimit == 0):
+                self.timeTempHitLimit = time.time()
+                print("Alert Primed for sensor %s, time = %d") % (self.deviceName, self.timeTempHitLimit)
+            if ((time.time() - self.timeTempHitLimit) >= 6000 ): # 6000 seconds == 100 minutes
+                self.alertSent = 1
+                report = ("Location: %s, Temp: %d, Time: %s") % (self.deviceName, self.temp, time.time())
+                try:
+                    requests.post("https://maker.ifttt.com/trigger/tempSensor/with/key/dRKUOa7iVsG41KPWPUoCI5", data=report) # My Key (bY70sf0_iym1J6GPy_gRAK), Dads key (dRKUOa7iVsG41KPWPUoCI5)
+                    print("Alert Sent!!!")
+                except Exception:
+                    print("*Failed to send Alert*")
+        elif ((self.temp < self.tempLimit) and (self.alertSent == 1)):
+            print("No Alert. Temp =%d, limit=%d") % (self.temp, self.tempLimit)
             self.alertSent = 0
+            self.timeTempHitLimit = 0
 
 
 for key in tempSensors.keys():
-    objectArray[key] = Device(key, tempSensors[key])
+    objectArray[key] = Device(tempSensors[key], key, tempLimit[key])
 
 while True:
     for key in objectArray.keys():
         objectArray.get(key).update()
-    time.sleep(300) #sleep for 1 second * 5min
+    time.sleep(30) #sleep for 1 second * 5min = 300 seconds
     print("\n\n")

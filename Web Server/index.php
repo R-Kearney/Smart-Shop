@@ -10,6 +10,10 @@ body {
 	padding: 20px;
 	font-size: 16px;
 }
+.content {
+	max-width: 90%;
+	display:inline-flex;
+}
  table, th, td {
 	 min-width: 50px;
 	 padding: 5px;
@@ -27,7 +31,35 @@ body {
 .button-success {
 	background: rgb(28, 184, 65); /* this is green */
 }
+.currentData {
+	float: left;
+	padding-left: 20px;
+}
+.relays {
+	float: right;
+	padding: 10px
+}
+.colour_box{
+	float: left;
+ width: 20px;
+ height: 20px;
+ margin-right: 5px;
+}
+.cb0 {
+	background: #af038e;
+}
+.cb1 {
+	background: #1bb33f;
+}
+.cb2 {
+	background: #1b51b3;
+}
+.cb3 {
+	background: #b3ae1b;
+}
 </style>
+<div class="content">
+<div class="relays">
 <?php
 // Connect to the MySQL database
 $servername = "localhost";
@@ -40,10 +72,8 @@ $k = 0; // holds number of sensors
 $timeArray = array();
 $tempArray = array();
 $sensorName = array(); // holds sensor names
-$colourArray = array(); // holds colour for each line
-$displayRange = 1000;
-
-
+$colourArray = array("af038e", "1bb33f", "1b51b3", "b3ae1b"); // holds colour for each line
+$displayRange = 288; // one day
 
 // // Get range if set
 if (isset($_GET["range"])) {
@@ -86,7 +116,7 @@ if ($result->num_rows > 0) {
 						array_push(${"tempArray" . $i}, $row["Temp"]); // add the new data
 						array_push(${"timeArray" . $i}, $row["Time"]);
 						array_push($sensorName, $row["Sensor"]); // Add the sensor name to an array
-						array_push($colourArray, random_color()); // make a new random colour and store in array
+						// array_push($colourArray, random_color()); // make a new random colour and store in array
 						$lastSensor = $row["Sensor"]; // Set current = last
 					}
 			    }
@@ -128,20 +158,11 @@ function tempData($id){
 		$element++;
 	}
 }
-
-// generate random colour
-function random_color_part() {
-    return str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT);
-}
-function random_color() {
-    return random_color_part() . random_color_part() . random_color_part();
-}
 ?>
 </head>
 <body>
 
 <?php // Buttons with GET requests for activating the relays ?>
-<br>
 <table>
 	<tr>
 	<td>
@@ -158,10 +179,10 @@ function random_color() {
 	</td>
 	</tr>
 </table>
-<br>
+</div>
 
 <?php // Last Temps and display range ?>
-<br>
+<div class="currentData">
 <table>
 	<tr>
 	<td>
@@ -169,26 +190,29 @@ function random_color() {
 			<select name="range">
 				<option value="24">2 Hours</option>
 		  <option value="288" selected="selected">1 Day</option>
-		  <option value="2016" selected="selected">7 Days</option>
+		  <option value="2016">7 Days</option>
 		  <option value="8640">1 Month</option>
 		  <option value="-1">ALL</option>
 			</select>
 		<input class="button-success pure-button" type="submit" value="Range">
 	</form>
 	</td>
+</tr>
 	<?php
+	 // Shows Current Temp
 		// $k = number of temp sensors
-		// echo($k); - debug
 		for ($x=0; $x <= $k; $x++) {
 			echo "<tr> <td>";
+			echo"<div class=\"colour_box " . "cb" . $x . "\"></div>";
 			$lastElement = (count(${"tempArray" . $x}) -1);
 			echo $sensorName[$x] . " Temp: " . "<b>" . ${"tempArray" . $x}[$lastElement] . "</b>";
 			echo "</td> </tr>";
 		}
 		?>
-	</tr>
 </table>
-<br>
+</div>
+</div>
+
 
 <?php // Container to hold graph and ledgend ?>
 <div class="graph">
@@ -224,6 +248,7 @@ function random_color() {
 			scaleShowLabels: true,
 			scaleType: "date",
 			legend: {position: 'bottom',},
+			scale: {position: 'right'},
 			scaleLabel: "<%=value%>oC",
 			scaleOverride : true,
 			scaleSteps : 20,
