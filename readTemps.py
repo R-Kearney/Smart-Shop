@@ -112,5 +112,5 @@ for key in tempSensors.keys():
 while True:
     for key in objectArray.keys():
         objectArray.get(key).update()
-    time.sleep(30) #sleep for 1 second * 5min = 300 seconds
+    time.sleep(300) #sleep for 1 second * 5min = 300 seconds
     print("\n\n")
