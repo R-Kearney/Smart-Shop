@@ -17,10 +17,10 @@ Mainly coded in Python, PHP and JavaScript.
 
 
 ## Requirements:
--Raspberry Pi - Raspbian with OneWire enabled
--DS18b20 OneWire temperature Sensors
--Apache, PHP, Mysql, Mysqli and Python
--IFTT account with Maker recipe.
+- Raspberry Pi - Raspbian with OneWire enabled
+- DS18b20 OneWire temperature Sensors
+- Apache, PHP, Mysql, Mysqli and Python
+- IFTT account with Maker recipe.
 
 
 
@@ -32,17 +32,19 @@ Copy python files to the Pi.
 Make a mysql database called TempSensors and then run makeDB.py
 
 Connect the sensors to the pi
+ 
 
 
 
 
 | DS18b20 | Signal | Raspberry Pi          |
-| ------- |:------:| ---------------------:|
+| ------- |--------| ----------------------|
 | GND     | Ground | GND                   |
 | DQ      | Data   | GPIO 4 (*Pulled high) |
 | VDQ     | +3.3v  | +3.3v                 |
 
 (4.7k ohm resistor between DQ and +3.3v)
+
 
 
 
