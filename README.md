@@ -10,18 +10,21 @@ Mainly coded in Python, PHP and JavaScript.
 - If the temperature goes above the limit for more than 100 minutes an IFTT recipe is called and alerts the user on their phone & smart watch.
 
 
+
 ###Future functionality:
 - Buttons on the site open/close shutters
 
 
-# Requirements:
+
+## Requirements:
 -Raspberry Pi - Raspbian with OneWire enabled
 -DS18b20 OneWire temperature Sensors
 -Apache, PHP, Mysql, Mysqli and Python
 -IFTT account with Maker recipe.
 
 
-# To USE:
+
+## To USE:
 Copy Web Server files to WWW directory.
 
 Copy python files to the Pi.
@@ -32,6 +35,7 @@ Connect the sensors to the pi
 
 
 
+
 | DS18b20 | Signal | Raspberry Pi          |
 | ------- |:------:| ---------------------:|
 | GND     | Ground | GND                   |
@@ -39,6 +43,8 @@ Connect the sensors to the pi
 | VDQ     | +3.3v  | +3.3v                 |
 
 (4.7k ohm resistor between DQ and +3.3v)
+
+
 
 
 Change the sensor serial numbers in readTemps.py to your own. (found by opening the OneWire devices folder)
