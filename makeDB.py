@@ -1,3 +1,8 @@
+# Ricky Kearney 
+# Creates a table in the mysql database.
+# Database name is 'TempSensors'
+# Table name is 'Temps'
+
 import MySQLdb
 
 # Open database connection

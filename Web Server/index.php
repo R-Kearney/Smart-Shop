@@ -1,3 +1,13 @@
+<!--
+Ricky Kearney
+Smart Supermarket - Hub
+
+This website pulls in the data from the mysql database and displays it on a
+chart.js chart. The current temp is shown and range of data is adjustable.
+The relay buttons aren't used yet but will be to open shutters or activate lights etc...
+
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

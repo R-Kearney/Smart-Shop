@@ -1,3 +1,12 @@
+# Ricky Kearney
+# Smart Supermarket - Temperature Sensors
+#
+# Reads the temperature from ds18b20 temp sensors over one wire.
+# Every 5 minutes the temp is checked to be valid and sends an alert over IFTT if its too high
+# the temp is then sent to a mysql database
+# To add the sensors replace the Serial number in tempSensors and tempLimit arrays with your own.
+#
+
 import os
 import time
 import MySQLdb
@@ -7,6 +16,7 @@ os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
 #temp_sensor = '/sys/bus/w1/devices/SERIALNUMBER/w1_slave'
+# Below array holds serial number for he temp sensors
 tempSensors = {'28-0316360119ff': 'Upper Freezer', '28-031636b962ff': 'Milk Fridge', '28-031636b6b2ff': 'Lower Freezer'}
 objectArray = {}
 tempLimit = {'28-0316360119ff': -10, '28-031636b962ff': 5, '28-031636b6b2ff': -10}
@@ -86,31 +96,27 @@ class Device(object):
         db.close()
 
     def checkForAlert(self):
-        print("Alert Function: Temp =%d, limit=%d, alertSent:%d") % (self.temp, self.tempLimit, self.alertSent)
         if ((self.temp >= self.tempLimit) and (self.alertSent == 0)):
-            print("Alert Waiting")
             if (self.timeTempHitLimit == 0):
                 self.timeTempHitLimit = time.time()
-                print("Alert Primed for sensor %s, time = %d") % (self.deviceName, self.timeTempHitLimit)
             if ((time.time() - self.timeTempHitLimit) >= 6000 ): # 6000 seconds == 100 minutes
                 self.alertSent = 1
                 report = ("Location: %s, Temp: %d, Time: %s") % (self.deviceName, self.temp, time.time())
                 try:
-                    requests.post("https://maker.ifttt.com/trigger/tempSensor/with/key/dRKUOa7iVsG41KPWPUoCI5", data=report) # My Key (bY70sf0_iym1J6GPy_gRAK), Dads key (dRKUOa7iVsG41KPWPUoCI5)
+                    requests.post("https://maker.ifttt.com/trigger/tempSensor/with/key/XXXXX", data=report) # Replace 'XXXXX' with your generated maker key.
                     print("Alert Sent!!!")
                 except Exception:
                     print("*Failed to send Alert*")
         elif ((self.temp < self.tempLimit) and (self.alertSent == 1)):
-            print("No Alert. Temp =%d, limit=%d") % (self.temp, self.tempLimit)
             self.alertSent = 0
             self.timeTempHitLimit = 0
 
-
+# Creates a device instance for each sensor
 for key in tempSensors.keys():
     objectArray[key] = Device(tempSensors[key], key, tempLimit[key])
 
 while True:
     for key in objectArray.keys():
-        objectArray.get(key).update()
+        objectArray.get(key).update() # updates temp
     time.sleep(300) #sleep for 1 second * 5min = 300 seconds
     print("\n\n")
