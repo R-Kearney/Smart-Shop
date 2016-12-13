@@ -20,6 +20,10 @@ body {
 	padding: 20px;
 	font-size: 16px;
 }
+a {
+    text-decoration: none;
+}
+
 .content {
 	max-width: 90%;
 	display:inline-flex;
@@ -78,12 +82,14 @@ $password = "raspbian";
 $dbname = "TempSensors";
 $lastSensor = ""; // holds the name of the previous sensor
 $i = 0; // Variable used counting
-$k = 0; // holds number of sensors
+$k = 0; // Another counting Variable
+$numberOfSensors = 0;
 $timeArray = array();
 $tempArray = array();
 $sensorName = array(); // holds sensor names
 $colourArray = array("af038e", "1bb33f", "1b51b3", "b3ae1b"); // holds colour for each line
 $displayRange = 288; // one day
+$sensorNumber = -1;
 
 // // Get range if set
 if (isset($_GET["range"])) {
@@ -95,6 +101,11 @@ if (isset($_GET["range"])) {
 		echo "Display Range = Last " . $displayRange . " Inputs";
 	}
 }
+
+// // Select only data from this sensor if set
+if (isset($_GET["sensor"])) {
+		$sensorNumber = $_GET["sensor"];
+	}
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -130,13 +141,14 @@ if ($result->num_rows > 0) {
 						$lastSensor = $row["Sensor"]; // Set current = last
 					}
 			    }
+							$numberOfSensors = $i;
 } else { // Table has no rows
     echo "<p><b>0 results found</b></p>";
 }
 $conn->close(); // Close database connection
 
 /* Print Temp Sensor Data used for debugging
-for ($i = 1; $i <= $k; $i++){
+for ($i = 1; $i <= $numberOfSensors; $i++){
 	echo("<b>" . $sensorName[$i] . "</b> ---- " );
 	for($x = 0; $x < count(${"tempArray" . $i}); $x++){
 		echo("Temp = " . ${"tempArray" . $i}[$x] . " Time = ");
@@ -210,13 +222,14 @@ function tempData($id){
 </tr>
 	<?php
 	 // Shows Current Temp
-		// $k = number of temp sensors
-		for ($x=0; $x <= $k; $x++) {
+		// $numberOfSensors = number of temp sensors
+		for ($x=0; $x <= $numberOfSensors; $x++) {
 			echo "<tr> <td>";
+			echo "<a href=index.php?sensor=" . $x . ">";
 			echo"<div class=\"colour_box " . "cb" . $x . "\"></div>";
 			$lastElement = (count(${"tempArray" . $x}) -1);
 			echo $sensorName[$x] . " Temp: " . "<b>" . ${"tempArray" . $x}[$lastElement] . "</b>";
-			echo "</td> </tr>";
+			echo "</a> </td> </tr>";
 		}
 		?>
 </table>
@@ -229,7 +242,7 @@ function tempData($id){
 	<h3>Fridge Temp Graph</h3>
 	<canvas id="tempGraph" width="430px" height="220px"></canvas>
 	<table><?php
-		for ($i = 0; $i <= $k; $i++){
+		for ($i = 0; $i <= $numberOfSensors; $i++){
 			echo("<td bgcolor='" . $colourArray[$i] . "'> </td>");
 			echo("<td> " . $sensorName[$i] . "</td> <td> </td>");
 		} ?>
@@ -242,12 +255,26 @@ function tempData($id){
 	Chart.defaults.global.animation = false;
 
 		var data3 = [{
-			<?php for ($i = 0; $i <= $k; $i++){ ?>
+			<?php
+			if ($sensorNumber >= 0) {
+				$i = $sensorNumber;
+			?>
+				label: '<?php echo($sensorName[$i]); ?>',
+				strokeColor: <?php echo("'#" . $colourArray[$i] . "'"); ?>,
+				data: [<?php  tempData($i);  ?>
+				] }
+		<?php	}
+			else {
+				for ($i = 0; $i <= $numberOfSensors; $i++){
+				?>
 					label: '<?php echo($sensorName[$i]); ?>',
 					strokeColor: <?php echo("'#" . $colourArray[$i] . "'"); ?>,
 					data: [<?php  tempData($i);  ?>
-					] }<?php if ($i != $k ){ echo(", {"); }
-				 } ?>
+					] }
+					<?php if ($i != $numberOfSensors ){ echo(", {"); }
+				 }
+				}
+			?>
 				];
 
 		var ctx3 = document.getElementById("tempGraph").getContext("2d");
@@ -257,7 +284,12 @@ function tempData($id){
 			scaleShowHorizontalLines: true,
 			scaleShowLabels: true,
 			scaleType: "date",
-			legend: {position: 'bottom',},
+			legend: {
+				display: false,
+						labels: {
+        display: false
+							}
+     },
 			scale: {position: 'right'},
 			scaleLabel: "<%=value%>oC",
 			scaleOverride : true,
