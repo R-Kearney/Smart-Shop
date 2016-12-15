@@ -14,7 +14,7 @@ Mainly coded in Python, PHP and JavaScript.
 ###Future functionality:
 - Buttons on the site open/close shutters
 
-
+![alt tag](https://raw.githubusercontent.com/R-Kearney/Smart-Shop/blob/master/screenshot.jpg)
 
 ## Requirements:
 - Raspberry Pi - Raspbian with OneWire enabled
@@ -32,7 +32,7 @@ Copy python files to the Pi.
 Make a mysql database called TempSensors and then run makeDB.py
 
 Connect the sensors to the pi
- 
+
 
 
 
