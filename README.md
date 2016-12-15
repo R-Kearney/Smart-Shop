@@ -14,7 +14,7 @@ Mainly coded in Python, PHP and JavaScript.
 ###Future functionality:
 - Buttons on the site open/close shutters
 
-![alt tag](https://raw.githubusercontent.com/R-Kearney/Smart-Shop/blob/master/screenshot.jpg)
+![Example chart](/screenshot.jpg)
 
 ## Requirements:
 - Raspberry Pi - Raspbian with OneWire enabled
