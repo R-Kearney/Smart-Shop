@@ -12,66 +12,10 @@ The relay buttons aren't used yet but will be to open shutters or activate light
 <html lang="en">
 <head>
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<link rel="stylesheet" href="/style.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="Chart.Core.min.js"></script>
 <script src="Chart.Scatter.min.js"></script>
-<style>
-body {
-	padding: 20px;
-	font-size: 16px;
-}
-a {
-    text-decoration: none;
-}
-
-.content {
-	max-width: 90%;
-	display:inline-flex;
-}
- table, th, td {
-	 min-width: 50px;
-	 padding: 5px;
- }
- .graph {
-	 width: 100%;
-	 max-width: 1000px;
- }
-.button-success {
-	color: white;
-	border-radius: 4px;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-}
-
-.button-success {
-	background: rgb(28, 184, 65); /* this is green */
-}
-.currentData {
-	float: left;
-	padding-left: 20px;
-}
-.relays {
-	float: right;
-	padding: 10px
-}
-.colour_box{
-	float: left;
- width: 20px;
- height: 20px;
- margin-right: 5px;
-}
-.cb0 {
-	background: #af038e;
-}
-.cb1 {
-	background: #1bb33f;
-}
-.cb2 {
-	background: #1b51b3;
-}
-.cb3 {
-	background: #b3ae1b;
-}
-</style>
 <div class="content">
 <div class="relays">
 <?php
@@ -208,7 +152,8 @@ function tempData($id){
 <table>
 	<tr>
 	<td>
-	<form action="index.php" target="_self">
+		<form action="index.php" target="_self">
+			<input type="hidden" name="sensor" value="<?php  if ($sensorNumber >= 0) { echo $sensorNumber; } ?>">
 			<select name="range">
 				<option value="24">2 Hours</option>
 		  <option value="288" selected="selected">1 Day</option>
@@ -225,7 +170,11 @@ function tempData($id){
 		// $numberOfSensors = number of temp sensors
 		for ($x=0; $x <= $numberOfSensors; $x++) {
 			echo "<tr> <td>";
-			echo "<a href=index.php?sensor=" . $x . ">";
+			echo "<a href=index.php?sensor=" . $x;
+			if (isset($_GET["range"])) {
+				echo "&range=" . $displayRange;
+			}
+			echo ">";
 			echo"<div class=\"colour_box " . "cb" . $x . "\"></div>";
 			$lastElement = (count(${"tempArray" . $x}) -1);
 			echo $sensorName[$x] . " Temp: " . "<b>" . ${"tempArray" . $x}[$lastElement] . "</b>";
