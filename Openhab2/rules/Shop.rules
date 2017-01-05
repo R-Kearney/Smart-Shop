@@ -1,0 +1,98 @@
+import org.joda.time.DateTime
+
+var Timer MSUpTimer = null
+var Timer MSDownTimer = null
+var Timer CSUpTimer = null
+var Timer CSDownTimer = null
+var Timer openAllTimer = null
+
+rule "Open All"
+when
+	item OpenAll changed from OFF to ON
+then
+	CShutterUp.sendCommand(ON)
+	MShutterUp.sendCommand(ON)
+
+	openAllTimer = createTimer(now.plusSeconds(23)) [|
+		CShutterUp.sendCommand(OFF)
+		MShutterUp.sendCommand(OFF)
+		OpenAll.sendCommand(OFF)
+	]
+end
+
+
+rule "auto off MShutterUp"
+when
+    Item MShutterUp changed
+then
+    if (MShutterUp.state==OFF) {
+        MSUpTimer.cancel
+        MSUpTimer = null
+    }
+    else if (MShutterUp.state==ON) {
+        if (MSUpTimer!=null) {
+            MSUpTimer.cancel
+            MSUpTimer = null
+        }
+        MSUpTimer = createTimer(now.plusSeconds(23)) [|
+            MShutterUp.sendCommand(OFF)
+        ]
+    }
+end
+
+rule "auto off MShutterDown"
+when
+    Item MShutterDown changed
+then
+    if (MShutterDown.state==OFF) {
+        MSDownTimer.cancel
+        MSDownTimer = null
+    }
+    else if (MShutterDown.state==ON) {
+        if (MSDownTimer!=null) {
+            MSDownTimer.cancel
+            MSDownTimer = null
+        }
+        MSDownTimer = createTimer(now.plusSeconds(23)) [| //use now.plusSeconds() for testing
+            MShutterDown.sendCommand(OFF)
+        ]
+    }
+end
+
+rule "auto off CShutterUp"
+when
+    Item CShutterUp changed
+then
+    if (CShutterUp.state==OFF) {
+        CSUpTimer.cancel
+        CSUpTimer = null
+    }
+    else if (CShutterUp.state==ON) {
+        if (CSUpTimer!=null) {
+            CSUpTimer.cancel
+            CSUpTimer = null
+        }
+        CSUpTimer = createTimer(now.plusSeconds(23)) [| //use now.plusSeconds() for testing
+            CShutterUp.sendCommand(OFF)
+        ]
+    }
+end
+
+rule "auto off CShutterDown"
+when
+    Item CShutterDown changed
+then
+    if (CShutterDown.state==OFF) {
+        CSDownTimer.cancel
+        CSDownTimer = null
+    }
+    else if (CShutterDown.state==ON) {
+        if (CSDownTimer!=null) {
+            CSDownTimer.cancel
+            CSDownTimer = null
+        }
+        CSDownTimer = createTimer(now.plusSeconds(23)) [| //use now.plusSeconds() for testing
+            CShutterDown.sendCommand(OFF)
+        ]
+    }
+end

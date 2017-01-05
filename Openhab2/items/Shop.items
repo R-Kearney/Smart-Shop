@@ -1,0 +1,10 @@
+//------------------------------------------------------------------------
+// Raspberry Pi
+// GPIO
+//------------------------------------------------------------------------
+
+Switch OpenAll "Open All Shutters"
+Switch CShutterUp "Coffee Shop Shutter Up" { gpio="pin:4" }
+Switch CShutterDown "Coffee Shop Shutter Down" { gpio="pin:17" }
+Switch MShutterUp "Main Enterance Shutter Up" { gpio="pin:27" }
+Switch MShutterDown "Main Enterance Shutter Down" { gpio="pin:22" }

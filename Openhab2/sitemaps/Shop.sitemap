@@ -1,0 +1,16 @@
+sitemap Shop label="Shop"
+{
+ //------------------------------------------------------------------------
+ // Raspberry Pi
+ // GPIO
+ //------------------------------------------------------------------------
+ Frame label="Shutters"
+ {
+ Switch item=OpenAll
+	Switch item=CShutterUp
+	Switch item=CShutterDown
+	Switch item=MShutterUp
+	Switch item=MShutterDown
+
+ }
+}
