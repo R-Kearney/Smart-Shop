@@ -77,7 +77,7 @@ Raspberry pi avivable GPIO: 4, 17, 27, 22, 18, 23, 24, 25 (Other GPIO can have p
 
 To connect the raspberry pi to shutters follow the circuit below.
 
-![Circuit](Openhab2/Circuit.JPG)
+![Circuit](Automated Shutters/Openhab2/Circuit.JPG)
 
 ##NOTE
 
