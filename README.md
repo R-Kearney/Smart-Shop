@@ -63,7 +63,7 @@ Open the website and enjoy the data.
 
 
 ## To USE (Automated Shutters):
-Download an install openhab2 on raspberry pi.
+Download and install openhab2 on raspberry pi.
 Install Binding GPIO to allow openhab to control Raspberry PI GPIO
 
 Components used:
@@ -72,7 +72,7 @@ Relay: OMRON G5Q-1A4EU 5DC RELAY, SPST, 250VAC, 10A
 
 Transistor: 2N3904 with 4k Rb
 
-Raspberry pi avivable GPIO: 4, 17, 27, 22, 18, 23, 24, 25 (Other GPIO can have pull ups/ downs which will make the circuit unstable on pi boot).
+Raspberry pi available GPIO: 4, 17, 27, 22, 18, 23, 24, 25 (Other GPIO can have pull ups/ downs which will make the circuit unstable on pi boot).
 
 
 To connect the raspberry pi to shutters follow the circuit below.
@@ -89,6 +89,6 @@ Reverse proxy with Authentication enabled.
 
 SSL connection
 
-IPtables to close unnesserry ports
+IPtables to close unnecessary ports
 
 VLAN with VPN access
