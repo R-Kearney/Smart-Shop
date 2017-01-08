@@ -17,7 +17,7 @@ Mainly coded in Python, PHP and JavaScript.
 - Intergrate fridge temps into Openhab.
 - Look at automating some lights and switches
 
-![Example chart](/screenshot.jpg)
+![Example chart](Fridge Temperature Sensors/screenshot.jpg)
 
 ## Requirements:
 - Raspberry Pi - Raspbian with OneWire enabled
