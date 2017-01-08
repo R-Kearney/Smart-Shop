@@ -1,9 +1,14 @@
+//------------------------------------------------------------------------
+// Ricky Kearney
+// Smart Supermarket - Automated Shutters
+//
+// Sitemap to display switches to open/close shutters.
+// This sitemap is visible on both web UIs and Openhab app
+//
+//------------------------------------------------------------------------
+
 sitemap Shop label="Shop"
 {
- //------------------------------------------------------------------------
- // Raspberry Pi
- // GPIO
- //------------------------------------------------------------------------
  Frame label="Shutters"
  {
  Switch item=OpenAll

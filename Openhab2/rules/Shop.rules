@@ -1,3 +1,13 @@
+//------------------------------------------------------------------------
+// Ricky Kearney
+// Smart Supermarket - Automated Shutters
+//
+// Rules for the Items to follow.
+// Open All item will activate the specified shutters for 23 seconds and automatically turn off.
+// Single shutter items will automatically turn off after 23 seconds (time of travel)
+//
+//------------------------------------------------------------------------
+
 import org.joda.time.DateTime
 
 var Timer MSUpTimer = null
@@ -8,16 +18,16 @@ var Timer openAllTimer = null
 
 rule "Open All"
 when
-	item OpenAll changed from OFF to ON
+	   Item OpenAll changed from OFF to ON
 then
-	CShutterUp.sendCommand(ON)
-	MShutterUp.sendCommand(ON)
+	   CShutterUp.sendCommand(ON)
+	   MShutterUp.sendCommand(ON)
 
-	openAllTimer = createTimer(now.plusSeconds(23)) [|
-		CShutterUp.sendCommand(OFF)
-		MShutterUp.sendCommand(OFF)
-		OpenAll.sendCommand(OFF)
-	]
+				openAllTimer = createTimer(now.plusSeconds(23)) [|
+								CShutterUp.sendCommand(OFF)
+								MShutterUp.sendCommand(OFF)
+								OpenAll.sendCommand(OFF)
+				]
 end
 
 

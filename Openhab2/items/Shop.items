@@ -1,9 +1,13 @@
 //------------------------------------------------------------------------
-// Raspberry Pi
-// GPIO
+// Ricky Kearney
+// Smart Supermarket - Automated Shutters
+//
+// Declaring the Shutter Items.
+// Single shutter items are bound to GPIO on the Raspberry Pi
+//
 //------------------------------------------------------------------------
 
-Switch OpenAll "Open All Shutters"
+Switch OpenAll "Open Main Shutters"
 Switch CShutterUp "Coffee Shop Shutter Up" { gpio="pin:4" }
 Switch CShutterDown "Coffee Shop Shutter Down" { gpio="pin:17" }
 Switch MShutterUp "Main Enterance Shutter Up" { gpio="pin:27" }
