@@ -69,12 +69,17 @@ Install Binding GPIO to allow openhab to control Raspberry PI GPIO
 Components used:
 
 Relay: OMRON G5Q-1A4EU 5DC RELAY, SPST, 250VAC, 10A
+
 Transistor: 2N3904 with 4k Rb
+
 Raspberry pi avivable GPIO: 4, 17, 27, 22, 18, 23, 24, 25 (Other GPIO can have pull ups/ downs which will make the circuit unstable on pi boot).
+
 
 To connect the raspberry pi to shutters follow the circuit below.
 
-![Circuit](Openhab2/Circuit.jpg)
+![Circuit](Openhab2/Circuit.JPG)
+
+##NOTE
 
 Once Openhab2 is running the shutters have been tested make sure to enable security.
 Security I would recommend but not limited to:
