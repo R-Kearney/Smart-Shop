@@ -3,8 +3,8 @@
 // Smart Supermarket - Automated Shutters
 //
 // Rules for the Items to follow.
-// Open All item will activate the specified shutters for 23 seconds and automatically turn off.
-// Single shutter items will automatically turn off after 23 seconds (time of travel)
+// Open All item will activate the specified shutters for 24 seconds and automatically turn off.
+// Single shutter items will automatically turn off after 24 seconds (time of travel)
 //
 //------------------------------------------------------------------------
 
@@ -14,6 +14,10 @@ var Timer MSUpTimer = null
 var Timer MSDownTimer = null
 var Timer CSUpTimer = null
 var Timer CSDownTimer = null
+var Timer BDSUpTimer = null
+var Timer BDSDownTimer = null
+var Timer DSUpTimer = null
+var Timer DSDownTimer = null
 var Timer openAllTimer = null
 
 rule "Open All"
@@ -22,10 +26,12 @@ when
 then
 	   CShutterUp.sendCommand(ON)
 	   MShutterUp.sendCommand(ON)
+				DShutterUp.sendCommand(ON)
 
-				openAllTimer = createTimer(now.plusSeconds(23)) [|
+				openAllTimer = createTimer(now.plusSeconds(24)) [|
 								CShutterUp.sendCommand(OFF)
 								MShutterUp.sendCommand(OFF)
+								DShutterUp.sendCommand(OFF)
 								OpenAll.sendCommand(OFF)
 				]
 end
@@ -44,7 +50,7 @@ then
             MSUpTimer.cancel
             MSUpTimer = null
         }
-        MSUpTimer = createTimer(now.plusSeconds(23)) [|
+        MSUpTimer = createTimer(now.plusSeconds(24)) [|
             MShutterUp.sendCommand(OFF)
         ]
     }
@@ -63,7 +69,7 @@ then
             MSDownTimer.cancel
             MSDownTimer = null
         }
-        MSDownTimer = createTimer(now.plusSeconds(23)) [| //use now.plusSeconds() for testing
+        MSDownTimer = createTimer(now.plusSeconds(24)) [|
             MShutterDown.sendCommand(OFF)
         ]
     }
@@ -82,7 +88,7 @@ then
             CSUpTimer.cancel
             CSUpTimer = null
         }
-        CSUpTimer = createTimer(now.plusSeconds(23)) [| //use now.plusSeconds() for testing
+        CSUpTimer = createTimer(now.plusSeconds(24)) [|
             CShutterUp.sendCommand(OFF)
         ]
     }
@@ -101,8 +107,86 @@ then
             CSDownTimer.cancel
             CSDownTimer = null
         }
-        CSDownTimer = createTimer(now.plusSeconds(23)) [| //use now.plusSeconds() for testing
+        CSDownTimer = createTimer(now.plusSeconds(24)) [|
             CShutterDown.sendCommand(OFF)
+        ]
+    }
+end
+
+
+rule "auto off BDShutterUp"
+when
+    Item BDShutterUp changed
+then
+    if (BDShutterUp.state==OFF) {
+        BDSUpTimer.cancel
+        BDSUpTimer = null
+    }
+    else if (BDShutterUp.state==ON) {
+        if (BDSUpTimer!=null) {
+            BDSUpTimer.cancel
+            BDSUpTimer = null
+        }
+        BDSUpTimer = createTimer(now.plusSeconds(24)) [|
+            BDShutterUp.sendCommand(OFF)
+        ]
+    }
+end
+
+rule "auto off BDShutterDown"
+when
+    Item BDShutterDown changed
+then
+    if (BDShutterDown.state==OFF) {
+        BDSDownTimer.cancel
+        BDSDownTimer = null
+    }
+    else if (BDShutterDown.state==ON) {
+        if (BDSDownTimer!=null) {
+            BDSDownTimer.cancel
+            BDSDownTimer = null
+        }
+        BDSDownTimer = createTimer(now.plusSeconds(24)) [|
+            BDShutterDown.sendCommand(OFF)
+        ]
+    }
+end
+
+
+rule "auto off DShutterUp"
+when
+    Item DShutterUp changed
+then
+    if (DShutterUp.state==OFF) {
+        DSUpTimer.cancel
+        DSUpTimer = null
+    }
+    else if (DShutterUp.state==ON) {
+        if (DSUpTimer!=null) {
+            DSUpTimer.cancel
+            DSUpTimer = null
+        }
+        DSUpTimer = createTimer(now.plusSeconds(24)) [|
+            DShutterUp.sendCommand(OFF)
+        ]
+    }
+end
+
+rule "auto off DShutterDown"
+when
+    Item DShutterDown changed
+then
+    if (DShutterDown.state==OFF) {
+        DSDownTimer.cancel
+        DSDownTimer = null
+    }
+    else if (DShutterDown.state==ON) {
+        if (DSDownTimer!=null) {
+            DSDownTimer.cancel
+            DSDownTimer = null
+        }
+        DSDownTimer = createTimer(now.plusSeconds(24)) [|
+            DShutterDown.sendCommand(OFF)
         ]
     }
 end

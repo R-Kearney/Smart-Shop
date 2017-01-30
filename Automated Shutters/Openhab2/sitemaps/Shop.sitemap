@@ -9,13 +9,22 @@
 
 sitemap Shop label="Shop"
 {
- Frame label="Shutters"
+ Frame label="Open Shutters"
  {
- Switch item=OpenAll
-	Switch item=CShutterUp
-	Switch item=CShutterDown
-	Switch item=MShutterUp
-	Switch item=MShutterDown
-
+ 	Switch item=MShutterUp
+	 Switch item=CShutterUp
+ 	Switch item=DShutterUp
+ 	Switch item=BDShutterUp
+ }
+  Frame label="All Shutters"
+  {
+    Switch item=OpenAll
+  }
+ Frame label="Close Shutters"
+ {
+ 	Switch item=MShutterDown
+  	Switch item=CShutterDown
+	  Switch item=DShutterDown
+   Switch item=BDShutterDown
  }
 }
