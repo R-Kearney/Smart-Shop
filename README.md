@@ -72,7 +72,7 @@ Relay: OMRON G5Q-1A4EU 5DC RELAY, SPST, 250VAC, 10A
 
 Transistor: 2N3904 with 4k Rb
 
-Raspberry pi GPIO used in this project: 4, 17, 27, 22, 12, 16, 6, 19 (Some other GPIO's can be used but watch out for some that have pull ups/ downs which will make the circuit unstable on pi boot).
+Raspberry pi GPIO used in this project: 4, 17, 27, 22, 12, 16, 26, 13 (Some other GPIO's can be used but watch out for some that have pull ups/ downs which will make the circuit unstable on pi boot).
 
 
 To connect the raspberry pi to shutters follow the circuit below.
