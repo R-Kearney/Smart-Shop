@@ -81,7 +81,7 @@ To connect the raspberry pi to shutters follow the circuit below.
 
 ##NOTE
 
-Once Openhab2 is running the shutters have been tested make sure to enable security.
+Once Openhab2 is running and the shutters have been tested make sure to enable security.
 
 Security I would recommend but not limited to:
 
