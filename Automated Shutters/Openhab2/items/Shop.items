@@ -14,5 +14,5 @@ Switch MShutterUp "Main Entrance Shutter Up" { gpio="pin:27" }
 Switch MShutterDown "Main Entrance Shutter Down" { gpio="pin:22" }
 Switch BDShutterUp "Back Door Shutter Up" { gpio="pin:16" }
 Switch BDShutterDown "Back Door Shutter Down" { gpio="pin:12" }
-Switch DShutterUp "Deli Shutter Up" { gpio="pin:6" }
-Switch DShutterDown "Deli Shutter Down" { gpio="pin:19" }
+Switch DShutterUp "Deli Shutter Up" { gpio="pin:26" }
+Switch DShutterDown "Deli Shutter Down" { gpio="pin:13" }
