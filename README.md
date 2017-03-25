@@ -1,10 +1,10 @@
 # Smart - Supermarket
 
-###Devices to make running a shop easier!
+### Devices to make running a shop easier!
 
 Mainly coded in Python, PHP and JavaScript.
 
-###Current functionality:
+### Current functionality:
 - Measures fridge & freezer temps every 5 minutes.
 - Plots them on a mobile friendly graph, with adjustable range
 - If the temperature goes above the limit for more than 100 minutes an IFTT recipe is called and alerts the user on their phone & smart watch.
@@ -13,7 +13,7 @@ Mainly coded in Python, PHP and JavaScript.
 
 
 
-###Future functionality:
+### Future functionality:
 - Intergrate fridge temps into Openhab.
 - Look at automating some lights and switches
 
@@ -79,7 +79,7 @@ To connect the raspberry pi to shutters follow the circuit below.
 
 ![Circuit](Automated Shutters/Openhab2/Circuit.JPG)
 
-##NOTE
+## NOTE
 
 Once Openhab2 is running and the shutters have been tested make sure to enable security.
 
